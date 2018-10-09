@@ -1,4 +1,4 @@
-package com.huawei.cloudopenlabs.portal.util;
+package com.common.util;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -131,7 +131,7 @@ public class URLClientUtil
     	CloseableHttpResponse httpResponse = null;
     	try {
 		
-	    	RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(2000).setConnectTimeout(2000).build();//设置请求和传输超时时间
+	    	RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5000).setConnectTimeout(2000).build();//设置请求和传输超时时间
 	    	HttpPost http = new HttpPost(url);
 	    	http.setConfig(requestConfig);
 	    	
@@ -151,12 +151,13 @@ public class URLClientUtil
 			return EntityUtils.toString(entity, "UTF-8");
     	} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			throw new RuntimeException("URLClientUtil post:"+e.getMessage());
 		}finally {
 			try {
 				client.close();
-				httpResponse.close();
-			} catch (IOException e) {
+				if(httpResponse!=null)
+					httpResponse.close();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -192,9 +193,7 @@ public class URLClientUtil
     
     
     
-//    
-//
-//    
+
 //   public static void main(String[] args) {
 //	   byte[] b= URLClientUtil.getInstance().downLoad("https://dggpcolp00003.huawei.com/col/was/resource//Content/Images/EcologicalProgress/CertificateFile/Mirantis%20OpenStack_%20Agile%20Controller-DCN%20V200R001%E5%8D%8E%E4%B8%BA%E6%8A%80%E6%9C%AF%E8%AE%A4%E8%AF%81%E9%A1%B9%E7%9B%AE.png");
 //	   System.out.println(b.length+"   <<<<<<");
